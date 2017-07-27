@@ -2,6 +2,8 @@
 
 namespace A2lix\I18nDoctrineBundle\Doctrine\ORM\Util;
 
+use Symfony\Component\Intl\Locale;
+
 /**
  * Translatable trait.
  *
@@ -39,7 +41,25 @@ trait Translatable
 
     public function getCurrentTranslation()
     {
+
+        $lang = Locale::getDefault();
+
+        //         $explode = explode('/', $_SERVER['PATH_INFO']);
+        //         $lang = $explode[1];
+
+        $translations = $this->getTranslations();
+        $typeClass = $translations->getTypeClass();
+        if (!empty($typeClass->cache) && isset($typeClass->cache['region'])) {
+            foreach ($translations as $translation) {
+                $locale = $translation->getLocale();
+                if ($locale === $lang) {
+                    return $translation;
+                }
+            }
+        }
+
         return $this->getTranslations()->first();
+
     }
 
     public function __call($method, $args)
