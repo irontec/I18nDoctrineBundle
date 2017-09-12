@@ -58,7 +58,8 @@ trait Translatable
             }
         }
 
-        return $this->getTranslations()->first();
+        $newClass = "\\" . $typeClass->getName();
+        return new $newClass();
 
     }
 
